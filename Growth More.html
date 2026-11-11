@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth More - Beneficiary Management Register</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --dark-footer: #0f172a;
+      --bg-color: #f8fafc;
+      --border-color: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .main-wrapper {
+      flex: 1;
+      padding: 15px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #cbd5e1;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+
+    header h1 {
+      color: var(--primary);
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .header-info {
+      font-size: 13px;
+      color: #475569;
+      text-align: right;
+    }
+
+    /* Configuration Panel (Hidden on Print) */
+    .config-section {
+      background: #f1f5f9;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .config-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .config-group input, .config-group select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      outline: none;
+      background: #fff;
+      font-size: 14px;
+    }
+
+    .custom-col-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .custom-col-box input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+      max-height: 120px;
+      overflow-y: auto;
+      padding: 5px;
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+    }
+
+    .checkbox-grid label {
+      font-weight: 500;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary { background-color: var(--primary); color: white; }
+    .btn-success { background-color: #16a34a; color: white; }
+    .btn-secondary { background-color: #475569; color: white; }
+
+    /* Clean Register Table Layout (100% Width Max Utilization) */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th, td {
+      padding: 5px 6px;
+      border: 1.5px solid var(--border-color);
+      font-size: 12px;
+      vertical-align: middle;
+      overflow: hidden;
+      word-wrap: break-word;
+    }
+
+    /* Column Width Classes */
+    th.col-sl, td.col-sl { width: 40px; text-align: center; background-color: #f1f5f9; }
+    th.col-wide, td.col-wide { width: 16%; }
+    th.col-compact, td.col-compact { width: 7%; text-align: center; } /* 3-5 chars compact size */
+
+    th {
+      background-color: #1e293b;
+      color: white;
+      text-align: center;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    th.col-sl { z-index: 15; }
+
+    /* Auto-resizing Textareas */
+    textarea.table-input {
+      width: 100%;
+      min-height: 24px;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 12px;
+      color: #000;
+      font-weight: 500;
+      padding: 2px;
+      resize: none;
+      overflow: hidden;
+      font-family: inherit;
+      line-height: 1.2;
+    }
+
+    td.col-compact textarea.table-input {
+      text-align: center;
+    }
+
+    textarea.table-input:focus {
+      background: #eff6ff;
+    }
+
+    /* Growth More Official Portal Footer */
+    .site-footer {
+      background-color: var(--dark-footer);
+      color: #94a3b8;
+      padding: 35px 20px 20px 20px;
+      margin-top: 30px;
+      font-size: 13px;
+      border-top: 4px solid var(--primary);
+    }
+
+    .footer-container {
+      max-width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 25px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 25px;
+      margin-bottom: 15px;
+    }
+
+    .footer-col h3 {
+      color: #ffffff;
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    .footer-col p, .footer-col li {
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li a {
+      color: #cbd5e1;
+      text-decoration: none;
+    }
+
+    .footer-bottom {
+      max-width: 100%;
+      margin: 0 auto;
+      line-height: 1.5;
+      font-size: 12px;
+    }
+
+    /* Zero-Margin Print Rules for Full Width Utilization */
+    @media print {
+      @page {
+        size: var(--print-size, A4 portrait);
+        margin: 4mm; /* Reduced margins to utilize full width as marked green */
+      }
+
+      .no-print, .site-footer {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        padding: 0;
+        color: black;
+      }
+
+      .container {
+        box-shadow: none;
+        padding: 0;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      header {
+        border-bottom: 2px solid #000;
+        margin-bottom: 6px;
+      }
+
+      header h1 {
+        color: #000;
+        font-size: 16px;
+      }
+
+      .table-container {
+        border: none;
+        overflow: visible;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+
+      thead {
+        display: table-header-group;
+      }
+
+      tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      th, td {
+        border: 1.5px solid #000 !important;
+        color: #000 !important;
+        padding: 3px 4px;
+        font-size: 10.5px;
+      }
+
+      th {
+        background-color: #e2e8f0 !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+      }
+
+      th.col-sl, td.col-sl {
+        background-color: #f1f5f9 !important;
+        -webkit-print-color-adjust: exact;
+      }
+
+      textarea.table-input {
+        color: #000 !important;
+        font-weight: 600;
+        font-size: 10.5px;
+        background: transparent !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-wrapper">
+    <div class="container">
+      <header>
+        <h1>Growth More</h1>
+        <div class="header-info">
+          <p><strong>Welcome Everyone, I Hope You All Well</strong></p>
+          <p id="liveClock">Active Time: Loading...</p>
+        </div>
+      </header>
+
+      <!-- Control Panel with Custom Column Add & Paper Size -->
+      <div class="config-section no-print">
+        <div class="config-grid">
+          <div class="config-group">
+            <label>Total Rows to Generate:</label>
+            <input type="number" id="rowCount" value="30" min="1" max="200">
+          </div>
+          <div class="config-group">
+            <label>Select Paper Size & Layout:</label>
+            <select id="paperSizeSelect">
+              <option value="A4 portrait" selected>A4 (Portrait - Full Width)</option>
+              <option value="A4 landscape">A4 (Landscape)</option>
+              <option value="Letter portrait">Letter (Portrait)</option>
+              <option value="Letter landscape">Letter (Landscape)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Add Custom Column Option -->
+        <label style="font-weight:600; margin-bottom:4px; display:block;">Add Custom Column:</label>
+        <div class="custom-col-box">
+          <input type="text" id="customColumnName" placeholder="Enter new column name (e.g. Pension, Ayushman)">
+          <button class="btn-secondary" onclick="addCustomColumn()">Add Column</button>
+        </div>
+
+        <label style="font-weight:600; margin-bottom:6px; display:block;">Select Register Headings (Columns):</label>
+        <div class="checkbox-grid" id="columnSelector">
+          <label><input type="checkbox" value="PS Name" checked> PS Name</label>
+          <label><input type="checkbox" value="Didi Name" checked> Didi Name</label>
+          <label><input type="checkbox" value="Aadhar No." checked> Aadhar No.</label>
+          <label><input type="checkbox" value="A/C No." checked> A/C No.</label>
+          <label><input type="checkbox" value="SHG" checked> SHG</label>
+          <label><input type="checkbox" value="PMSBY/JJBY" checked> PMSBY/PMJJBY</label>
+          <label><input type="checkbox" value="PDS" checked> PDS(Ration)</label>
+          <label><input type="checkbox" value="Job Card" checked>Job Card</label>
+          <label><input type="checkbox" value="CSG" checked> CSG</label>
+          <label><input type="checkbox" value="Age" checked> Age</label>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-bar no-print">
+        <button class="btn-primary" onclick="generateTable()">Generate</button>
+        <button class="btn-success" onclick="triggerPrint()">Download / Print PDF</button>
+      </div>
+
+      <!-- Register Grid Table -->
+      <div class="table-container">
+        <table id="registerTable">
+          <thead id="tableHeader"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Growth More Official Portal Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3>Growth More Benefits & Ledger Portal</h3>
+        <p>Empowering communities through efficient beneficiary tracking, welfare scheme status management (PMSBY, PMJJBY, PDS/Ration, SHG, Job Card), and digital record-keeping.</p>
+        <p><strong>System Timezone:</strong> Indian Standard Time (IST) | Real-time session active.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Quick Navigation</h3>
+        <ul>
+          <li><a href="#about">About Directory</a></li>
+          <li><a href="#benefits">Welfare Benefits Info</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#contact">Contact Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Compliance & Terms</h3>
+        <ul>
+          <li><a href="#terms">Terms of Service</a></li>
+          <li><a href="#disclaimer">Data Disclaimer</a></li>
+          <li><a href="#security">Secure Local Storage</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Growth More Directory. All rights reserved.</p>
+      <p><strong>Disclaimer:</strong> Growth More is an independent informational platform designed to streamline beneficiary record maintenance and quick access to essential portals.</p>
+    </div>
+  </footer>
+
+  <script>
+    // List of compact status fields (3-5 characters size)
+    const compactFields = ["SHG", "PMSBY/PMJJBY", "PDS (Ration)", "Job Card", "CSG", "Age"];
+
+    function addCustomColumn() {
+      const input = document.getElementById('customColumnName');
+      const colName = input.value.trim();
+      if (!colName) return;
+
+      const selectorDiv = document.getElementById('columnSelector');
+      const newLabel = document.createElement('label');
+      newLabel.innerHTML = `<input type="checkbox" value="${colName}" checked> ${colName}`;
+      selectorDiv.appendChild(newLabel);
+      input.value = '';
+      generateTable();
+    }
+
+    function getSelectedHeadings() {
+      const checkboxes = document.querySelectorAll('#columnSelector input[type="checkbox"]');
+      let selected = [];
+      checkboxes.forEach(cb => {
+        if (cb.checked) selected.push(cb.value);
+      });
+      return selected;
+    }
+
+    function autoResizeTextarea(el) {
+      el.style.height = 'auto';
+      el.style.height = (el.scrollHeight) + 'px';
+    }
+
+    function getColumnClass(heading) {
+      // If user added custom column, treat as compact if short, otherwise wide
+      if (compactFields.includes(heading) || heading.length <= 8) return "col-compact";
+      return "col-wide";
+    }
+
+    function generateTable() {
+      const selectedHeadings = getSelectedHeadings();
+      const rowCount = parseInt(document.getElementById('rowCount').value) || 30;
+      const tableHeader = document.getElementById('tableHeader');
+      const tableBody = document.getElementById('tableBody');
+
+      let headerHTML = '<tr><th class="col-sl">SI.</th>';
+      selectedHeadings.forEach(heading => {
+        const colClass = getColumnClass(heading);
+        headerHTML += `<th class="${colClass}">${heading}</th>`;
+      });
+      headerHTML += '</tr>';
+      tableHeader.innerHTML = headerHTML;
+
+      let bodyHTML = '';
+      for (let i = 1; i <= rowCount; i++) {
+        bodyHTML += `<tr><td class="col-sl"><strong>${i}</strong></td>`;
+        selectedHeadings.forEach((heading, cIdx) => {
+          const colClass = getColumnClass(heading);
+          bodyHTML += `<td class="${colClass}"><textarea class="table-input" data-row="${i}" data-col="${cIdx}" oninput="autoResizeTextarea(this)"></textarea></td>`;
+        });
+        bodyHTML += '</tr>';
+      }
+      tableBody.innerHTML = bodyHTML;
+    }
+
+    function triggerPrint() {
+      const selectedSize = document.getElementById('paperSizeSelect').value;
+      document.documentElement.style.setProperty('--print-size', selectedSize);
+      window.print();
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const timeString = now.toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric'
+      }) + ' | ' + now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('liveClock').innerText = 'Session Time: ' + timeString;
+    }
+
+    window.onload = function() {
+      generateTable();
+      updateClock();
+      setInterval(updateClock, 1000);
+    };
+  </script>
+</body>
+</html>
